@@ -1,0 +1,4 @@
+php artisan tinker - opens a php interactive shell
+DB::connection()->getPDO(); - gets connection attributes - can be used to check connection, it will throw an exception if connection fails
+php artisan list - lists all commands
+php artisan about - shows app info like environment, debug mode, url...
