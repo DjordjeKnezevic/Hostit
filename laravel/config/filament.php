@@ -85,22 +85,4 @@ return [
 
     'livewire_loading_delay' => 'default',
 
-
-    'auth' => [
-        'guard' => null,
-        'pages' => [
-            'login' => \Filament\Pages\Login::class,
-        ],
-        'middleware' => [
-            'base' => 'web',
-            'auth' => 'auth',
-        ],
-    ],
-
-    'guard' => [
-        'web' => [
-            'user' => \App\Models\User::class,
-        ],
-    ],
-
 ];

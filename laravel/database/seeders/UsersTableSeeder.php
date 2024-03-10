@@ -33,19 +33,19 @@ class UsersTableSeeder extends Seeder
             [
                 'role_id' => $premiumRole,
                 'name' => 'Premium User 1',
-                'email' => 'user1@example.com',
+                'email' => 'premiumuser@example.com',
                 'password' => Hash::make('password'),
             ],
             [
                 'role_id' => $userRole,
                 'name' => 'Regular User 1',
-                'email' => 'user2@example.com',
+                'email' => 'user1@example.com',
                 'password' => Hash::make('password'),
             ],
             [
                 'role_id' => $userRole,
                 'name' => 'Regular User 2',
-                'email' => 'user3@example.com',
+                'email' => 'user2@example.com',
                 'password' => Hash::make('password'),
             ],
         ];
