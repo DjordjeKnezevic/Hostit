@@ -2,9 +2,14 @@ START_FLAG ?= -d
 BUILD_FLAG ?= --build
 
 init: start
-	@echo "Initializing project..."
-	@docker-compose exec -T app php artisan migrate:fresh --seed
-	@echo "Initialization complete."
+	@echo "Starting project initialization..."
+	@echo "Installing Composer dependencies..."
+	@docker-compose exec -T app composer install
+	@echo "Running migrations..."
+	@docker-compose exec -T app php artisan migrate --force
+	@echo "Seeding the database..."
+	@docker-compose exec -T app php artisan db:seed --force
+	@echo "Project initialization complete."
 
 start:
 	docker-compose up $(START_FLAG)
