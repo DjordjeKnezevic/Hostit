@@ -5,6 +5,11 @@ init: start
 	@echo "Starting project initialization..."
 	@echo "Installing Composer dependencies..."
 	@docker-compose exec -T app composer install
+	@echo "Waiting for MySQL to be ready..."
+	@until docker-compose exec -T db mysqladmin ping -h "db" --silent; do \
+		echo 'Waiting for MySQL...' ; \
+		sleep 1 ; \
+	done
 	@echo "Running migrations..."
 	@docker-compose exec -T app php artisan migrate --force
 	@echo "Seeding the database..."
