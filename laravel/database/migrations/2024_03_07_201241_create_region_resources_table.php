@@ -13,12 +13,12 @@ class CreateRegionResourcesTable extends Migration
             $table->unsignedBigInteger('location_id');
             $table->integer('total_cpu_cores');
             $table->integer('remaining_cpu_cores');
-            $table->integer('total_ram'); // In GB
-            $table->integer('remaining_ram'); // In GB
-            $table->integer('total_storage'); // In GB
-            $table->integer('remaining_storage'); // In GB
-            $table->integer('total_bandwidth'); // In TB
-            $table->integer('remaining_bandwidth'); // In TB
+            $table->integer('total_ram');
+            $table->integer('remaining_ram');
+            $table->integer('total_storage');
+            $table->integer('remaining_storage');
+            $table->integer('total_bandwidth');
+            $table->integer('remaining_bandwidth');
             $table->timestamps();
 
             $table->foreign('location_id')->references('id')->on('locations')->onDelete('cascade');

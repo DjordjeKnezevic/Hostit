@@ -22,7 +22,7 @@
             </div>
             <div class="col-md-6">
                 <div class="img-box">
-                    <img src="{{ asset('img/about-img.png') }}" alt="About Hostit">
+                    <img src="{{ Storage::url('img/about-img.png') }}" alt="About Hostit">
                 </div>
             </div>
         </div>

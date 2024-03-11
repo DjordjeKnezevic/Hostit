@@ -10,5 +10,6 @@ class Testimonial extends Model
         'name',
         'type',
         'description',
+        'image'
     ];
 }

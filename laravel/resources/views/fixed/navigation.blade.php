@@ -1,7 +1,7 @@
 <header class="header_section">
     <div class="container-fluid">
         <nav class="navbar navbar-expand-lg custom_nav-container ">
-            <a class="navbar-brand" href="index.html">
+            <a class="navbar-brand" href="{{ route('index') }}">
                 <span>Hostit</span>
             </a>
 
@@ -37,6 +37,11 @@
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                @if (Auth::user()->isAdmin())
+                                    <a class="dropdown-item" href="/admin">
+                                        Admin Panel
+                                    </a>
+                                @endif
                                 <a class="dropdown-item" href="{{ route('logout') }}"
                                     onclick="event.preventDefault();
                                              document.getElementById('logout-form').submit();">

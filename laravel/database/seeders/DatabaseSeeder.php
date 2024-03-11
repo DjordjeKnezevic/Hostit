@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Models\Pricing;
 use App\Models\RegionResource;
+use App\Models\Server;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -21,6 +22,7 @@ class DatabaseSeeder extends Seeder
             TestimonialsTableSeeder::class,
             FaqsTableSeeder::class,
             UsersTableSeeder::class,
+            ServerTypeTableSeeder::class,
             ServersTableSeeder::class,
             PricingTableSeeder::class,
             RegionResourcesTableSeeder::class,

@@ -16,34 +16,39 @@
                         <p class="location-name d-block">{{ $location->name }}</p>
                         <p class="location-details d-block">{{ $location->network_zone }} - {{ $location->city }}</p>
                     </div>
-                    <img src="{{ asset($location->image) }}" alt="">
+                    <img src="{{ Storage::url($location->image) }}" alt="">
                 </button>
                 <div class="collapse" id="serverDetails{{ $location->id }}">
                     @foreach ($location->servers as $server)
                         <div class="card card-body mt-2">
-                            <h5 class="text-center">{{ $server->name }}</h5>
+                            <h5 class="text-center">{{ $server->serverType->name }}</h5>
                             <ul>
-                                <li>CPU: {{ $server->cpu_cores }} cores</li>
-                                <li>RAM: {{ $server->ram }} GB</li>
-                                <li>Storage: {{ $server->storage }} GB</li>
-                                <li>Network Speed: {{ $server->network_speed }}</li>
+                                <li>CPU: {{ $server->serverType->cpu_cores }} cores</li>
+                                <li>RAM: {{ $server->serverType->ram }} GB</li>
+                                <li>Storage: {{ $server->serverType->storage }} GB</li>
+                                <li>Network Speed: {{ $server->serverType->network_speed }}</li>
                                 <li>Weekly Backups</li>
                                 <li>DDoS Protection</li>
                                 <li>Full Root Access</li>
                                 <li>24/7/365 Tech Support</li>
                             </ul>
                             <button class="btn btn-secondary mt-2" type="button" data-toggle="collapse"
-                                data-target="#pricingPlans{{ $server->id }}" aria-expanded="false"
-                                aria-controls="pricingPlans{{ $server->id }}">
+                                data-target="#pricingPlans{{ $server->serverType->id }}" aria-expanded="false"
+                                aria-controls="pricingPlans{{ $server->serverType->id }}">
                                 Pricing Plans
                             </button>
-                            <div class="collapse" id="pricingPlans{{ $server->id }}">
+                            <div class="collapse" id="pricingPlans{{ $server->serverType->id }}">
                                 @foreach ($server->pricing as $price)
                                     <div class="card card-body">
                                         {{ ucfirst($price->period) }}: ${{ $price->price }}
+                                        @if (in_array($price->period, ['monthly', 'yearly']))
+                                            *
+                                        @endif
                                     </div>
                                 @endforeach
+                                <small>* Paid upfront.</small>
                             </div>
+
                             @auth
                                 <a href="" class="btn btn-success mt-2">Rent now</a>
                             @else

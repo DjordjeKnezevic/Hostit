@@ -27,7 +27,7 @@
                                 <div class="row">
                                     <div class="col-lg-10 mx-auto">
                                         <div class="img-box">
-                                            <img src="{{ asset($slide['image']) }}" alt="">
+                                            <img src="{{ Storage::url($slide['image']) }}" alt="">
                                         </div>
                                     </div>
                                 </div>

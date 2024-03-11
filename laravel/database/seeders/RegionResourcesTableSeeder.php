@@ -16,13 +16,13 @@ class RegionResourcesTableSeeder extends Seeder
             DB::table('region_resources')->insert([
                 'location_id' => $location->id,
                 'total_cpu_cores' => 1000,
-                'remaining_cpu_cores' => 1000, // Assuming full capacity to start
-                'total_ram' => 2000, // In GB
-                'remaining_ram' => 2000, // In GB
-                'total_storage' => 5000, // In GB
-                'remaining_storage' => 5000, // In GB
-                'total_bandwidth' => 100, // In TB
-                'remaining_bandwidth' => 100, // In TB
+                'remaining_cpu_cores' => 1000,
+                'total_ram' => 2000,
+                'remaining_ram' => 2000,
+                'total_storage' => 5000,
+                'remaining_storage' => 5000,
+                'total_bandwidth' => 100000,
+                'remaining_bandwidth' => 100000,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

@@ -11,7 +11,7 @@ class PricingTableSeeder extends Seeder
 {
     public function run()
     {
-        $servers = Server::with('location')->get();
+        $servers = Server::with('serverType')->with('location')->get();
         $locationAdjustments = [
             'New York' => 1,
             'San Francisco' => 1.05,
@@ -23,7 +23,7 @@ class PricingTableSeeder extends Seeder
 
         foreach ($servers as $server) {
             $baseHourlyRate = 0.01;
-            $hourlyRate = $baseHourlyRate * $server->cpu_cores * ($server->ram / 2) * $locationAdjustments[$server->location->city];
+            $hourlyRate = $baseHourlyRate * $server->serverType->cpu_cores * $locationAdjustments[$server->location->city];
             $monthlyRate = round($hourlyRate * 730 * 0.8, 2);
             $yearlyRate = round($monthlyRate * 12 * 0.8, 2);
 
@@ -37,7 +37,7 @@ class PricingTableSeeder extends Seeder
                 DB::table('pricing')->insert([
                     'service_id' => $server->id,
                     'service_type' => 'App\Models\Server',
-                    'name' => "{$server->name} - {$entry['period']}",
+                    'name' => "{$server->serverType->name} - {$entry['period']} - {$server->location->city}",
                     'price' => $entry['price'],
                     'period' => $entry['period'],
                     'valid_from' => now(),

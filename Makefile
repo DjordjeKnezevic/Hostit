@@ -9,6 +9,8 @@ init: start
 	@docker-compose exec -T app php artisan migrate --force
 	@echo "Seeding the database..."
 	@docker-compose exec -T app php artisan db:seed --force
+	@echo "Linking storage..."
+	@docker-compose exec -T app php artisan storage:link
 	@echo "Project initialization complete."
 
 start:

@@ -4,7 +4,7 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 use App\Models\Pricing as PricingModel;
-use App\Models\Server;
+use App\Models\ServerType as Server;
 
 class Pricing extends Component
 {
@@ -13,14 +13,33 @@ class Pricing extends Component
 
     public function __construct()
     {
-        // Fetch the minimal prices for each period
+
+        $now = now();
+
         $this->pricingPlans = [
-            'hourly' => PricingModel::where('period', 'hourly')->min('price'),
-            'monthly' => PricingModel::where('period', 'monthly')->min('price'),
-            'yearly' => PricingModel::where('period', 'yearly')->min('price'),
+            'hourly' => PricingModel::where('period', 'hourly')
+                ->where('valid_from', '<=', $now)
+                ->where(function ($query) use ($now) {
+                    $query->where('valid_until', '>=', $now)
+                        ->orWhereNull('valid_until');
+                })
+                ->min('price'),
+            'monthly' => PricingModel::where('period', 'monthly')
+                ->where('valid_from', '<=', $now)
+                ->where(function ($query) use ($now) {
+                    $query->where('valid_until', '>=', $now)
+                        ->orWhereNull('valid_until');
+                })
+                ->min('price'),
+            'yearly' => PricingModel::where('period', 'yearly')
+                ->where('valid_from', '<=', $now)
+                ->where(function ($query) use ($now) {
+                    $query->where('valid_until', '>=', $now)
+                        ->orWhereNull('valid_until');
+                })
+                ->min('price'),
         ];
 
-        // Fetch the highest specs available
         $this->maxSpecs = [
             'cpu' => Server::max('cpu_cores'),
             'ram' => Server::max('ram'),

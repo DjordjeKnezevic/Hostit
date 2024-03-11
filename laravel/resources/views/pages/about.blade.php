@@ -30,7 +30,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="img-box">
-                        <img src="{{ asset('img/about-img.png') }}" alt="About Hostit">
+                        <img src="{{ Storage::url('img/about-img.png') }}" alt="About Hostit">
                     </div>
                 </div>
             </div>
@@ -46,7 +46,7 @@
                 @foreach ($locations as $location)
                     <div class="col-md-4">
                         <div class="location_box">
-                            <img src="{{ asset($location->image) }}" alt="{{ $location->name }}">
+                            <img src="{{ Storage::url($location->image) }}" alt="{{ $location->name }}">
                             <div class="location_info">
                                 <h4>{{ $location->city }}</h4>
                                 <p>{{ $location->name }} - {{ $location->network_zone }}</p>

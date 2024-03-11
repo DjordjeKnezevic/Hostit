@@ -48,23 +48,23 @@
                     <div class="info_links">
                         <a class="{{ Route::currentRouteName() == 'index' ? 'active' : '' }}"
                             href="{{ route('index') }}">
-                            <img src="{{ asset('img/nav-bullet.png') }}" alt=""> Home
+                            <img src="{{ Storage::url('img/nav-bullet.png') }}" alt=""> Home
                         </a>
                         <a class="{{ Route::currentRouteName() == 'about' ? 'active' : '' }}"
                             href="{{ route('about') }}">
-                            <img src="{{ asset('img/nav-bullet.png') }}" alt=""> About
+                            <img src="{{ Storage::url('img/nav-bullet.png') }}" alt=""> About
                         </a>
                         <a class="{{ Route::currentRouteName() == 'service' ? 'active' : '' }}"
                             href="{{ route('service') }}">
-                            <img src="{{ asset('img/nav-bullet.png') }}" alt=""> Services
+                            <img src="{{ Storage::url('img/nav-bullet.png') }}" alt=""> Services
                         </a>
                         <a class="{{ Route::currentRouteName() == 'price' ? 'active' : '' }}"
                             href="{{ route('price') }}">
-                            <img src="{{ asset('img/nav-bullet.png') }}" alt=""> Pricing
+                            <img src="{{ Storage::url('img/nav-bullet.png') }}" alt=""> Pricing
                         </a>
                         <a class="{{ Route::currentRouteName() == 'contact' ? 'active' : '' }}"
                             href="{{ route('contact') }}">
-                            <img src="{{ asset('img/nav-bullet.png') }}" alt=""> Contact Us
+                            <img src="{{ Storage::url('img/nav-bullet.png') }}" alt=""> Contact Us
                         </a>
                     </div>
                 </div>

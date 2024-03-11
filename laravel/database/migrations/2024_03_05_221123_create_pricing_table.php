@@ -16,7 +16,7 @@ class CreatePricingTable extends Migration
             $table->string('name');
             $table->decimal('price', 10, 2);
             $table->enum('period', ['hourly', 'monthly', 'yearly']);
-            $table->timestamp('valid_from')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('valid_from')->nullable()->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('valid_until')->nullable();
             $table->timestamps();
 

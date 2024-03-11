@@ -15,7 +15,7 @@
                             </div>
                         @endunless
                         <div class="img-box">
-                            <img src="{{ asset($service['image']) }}" alt="" class="img-fluid">
+                            <img src="{{ Storage::url($service['image']) }}" alt="" class="img-fluid">
                         </div>
                         <div class="detail-box">
                             <h4>{{ $service['title'] }}</h4>

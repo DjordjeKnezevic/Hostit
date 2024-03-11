@@ -4,7 +4,7 @@
             <div class="col-md-10 mx-auto">
                 <div class="box">
                     <div class="img-box">
-                        <img src="{{ asset($testimonial->image) }}" alt="">
+                        <img src="{{ Storage::url($testimonial->image) }}" alt="">
                     </div>
                     <div class="detail-box">
                         <div class="client_info">

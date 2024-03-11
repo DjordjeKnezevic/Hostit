@@ -14,7 +14,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <a href="" class="img-box">
-                        <img src="{{ asset('img/server-img.jpg') }}" alt="">
+                        <img src="{{ Storage::url('img/server-img.jpg') }}" alt="">
                         <div class="play_btn">
                             <button>
                                 <i class="fa fa-play" aria-hidden="true"></i>

@@ -10,6 +10,7 @@ use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Illuminate\Support\Facades\Hash;
 use Filament\Forms\Components\TextInput;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\UserResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -78,6 +79,9 @@ class UserResource extends Resource
                     ->getStateUsing(fn ($record) => $record->remember_token !== null)
             ])
             ->filters([
+                SelectFilter::make('role_id')
+                    ->relationship('role', 'name')
+                    ->label('Role'),
                 Tables\Filters\Filter::make('Verified')
                     ->query(fn ($query) => $query->whereNotNull('email_verified_at')),
                 Tables\Filters\Filter::make('Unverified')
