@@ -10,10 +10,8 @@ init: start
 		echo 'Waiting for MySQL...' ; \
 		sleep 1 ; \
 	done
-	@echo "Running migrations..."
-	@docker-compose exec -T app php artisan migrate --force
-	@echo "Seeding the database..."
-	@docker-compose exec -T app php artisan db:seed --force
+	@echo "Running migrations and seeders..."
+	@docker-compose exec -T app php artisan migrate:fresh --seed
 	@echo "Linking storage..."
 	@docker-compose exec -T app php artisan storage:link
 	@echo "Project initialization complete."
