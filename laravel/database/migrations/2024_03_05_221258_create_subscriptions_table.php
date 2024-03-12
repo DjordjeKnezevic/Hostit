@@ -13,7 +13,7 @@ class CreateSubscriptionsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->unsignedBigInteger('service_id');
-            $table->enum('service_type', ['server', 'domain']);
+            $table->string('service_type');
             $table->unsignedBigInteger('pricing_id');
             $table->foreign('pricing_id')->references('id')->on('pricing');
             $table->timestamp('start_date');

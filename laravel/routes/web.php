@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ServerController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
@@ -69,3 +70,17 @@ Route::post('/email/resend', function (Request $request) {
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 Route::get('/servers', [ServerController::class, 'index'])->name('server');
+
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/rent-server', [ServerController::class, 'rent'])->name('rent-server');
+    Route::get('/get-servers', [ServerController::class, 'getServers'])->name('get-servers');
+    Route::get('/get-server-pricing', [ServerController::class, 'getServerPricing'])->name('get-server-pricing');
+    Route::get('/get-locations', [ServerController::class, 'getLocations'])->name('get-locations');
+    Route::get('/location-details/{location}', [ServerController::class, 'locationDetails'])->name('location-details');
+    Route::get('/server-details/{server}', [ServerController::class, 'serverDetails'])->name('server-details');
+    Route::get('/pricing-details/{pricing}', [ServerController::class, 'pricingDetails'])->name('pricing-details');
+    Route::post('/process-renting', [ServerController::class, 'processRenting'])->name('process-renting');
+});
+
+Route::middleware('auth')->get('/profile', [ProfileController::class, 'index'])->name('profile');

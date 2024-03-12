@@ -19,7 +19,7 @@
                         <a class="nav-link" href="{{ route('about') }}"> About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ route('service') }}">Services</a>
+                        <a class="nav-link" href="{{ route('server') }}">Servers</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('price') }}">Pricing</a>
@@ -37,6 +37,9 @@
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ route('rent-server') }}">
+                                    Rent a server
+                                </a>
                                 @if (Auth::user()->isAdmin())
                                     <a class="dropdown-item" href="/admin">
                                         Admin Panel

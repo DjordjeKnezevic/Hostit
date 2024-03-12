@@ -49,11 +49,19 @@
                                 <small>* Paid upfront.</small>
                             </div>
 
-                            @auth
-                                <a href="" class="btn btn-success mt-2">Rent now</a>
+                            @if (Auth::user() && Auth::user()->hasVerifiedEmail())
+                                <a href="{{ route('rent-server', ['server' => $server->id]) }}"
+                                    class="btn btn-success mt-2">Rent now</a>
                             @else
-                                <a href="{{ route('login') }}" class="btn btn-success mt-2">Rent now</a>
-                            @endauth
+                                <a href="{{ route('login') }}"
+                                    onclick="event.preventDefault(); document.getElementById('login-form').submit();"
+                                    class="btn btn-success mt-2">Rent now</a>
+                                <form id="login-form" action="{{ route('login') }}" method="GET" style="display: none;">
+                                    <input type="hidden" name="redirect_to"
+                                        value="{{ route('rent-server', ['server' => $server->id]) }}">
+                                </form>
+                            @endif
+
                         </div>
                     @endforeach
                 </div>

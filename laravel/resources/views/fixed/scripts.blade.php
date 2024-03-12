@@ -1,6 +1,5 @@
 <script src="{{ asset('js/jquery-3.4.1.min.js') }}"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 <script src="{{ asset('js/htmx.min.js') }}"></script>
 <script src="{{ asset('js/bootstrap.js') }}"></script>
 <script>
@@ -43,3 +42,5 @@
         toastr.success("{{ session('status') }}");
     @endif
 </script>
+
+@stack('scripts')

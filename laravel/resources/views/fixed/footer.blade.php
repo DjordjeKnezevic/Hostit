@@ -54,9 +54,9 @@
                             href="{{ route('about') }}">
                             <img src="{{ Storage::url('img/nav-bullet.png') }}" alt=""> About
                         </a>
-                        <a class="{{ Route::currentRouteName() == 'service' ? 'active' : '' }}"
-                            href="{{ route('service') }}">
-                            <img src="{{ Storage::url('img/nav-bullet.png') }}" alt=""> Services
+                        <a class="{{ Route::currentRouteName() == 'server' ? 'active' : '' }}"
+                            href="{{ route('server') }}">
+                            <img src="{{ Storage::url('img/nav-bullet.png') }}" alt=""> Servers
                         </a>
                         <a class="{{ Route::currentRouteName() == 'price' ? 'active' : '' }}"
                             href="{{ route('price') }}">

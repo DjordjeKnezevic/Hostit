@@ -11,14 +11,19 @@ use Illuminate\Auth\Events\Registered;
 
 class UserController extends Controller
 {
-    public function showLoginForm()
+    public function showLoginForm(Request $request)
     {
         if (Auth::check() && Auth::user()->hasVerifiedEmail()) {
             return redirect()->route('index');
         }
 
+        if ($request->has('redirect_to')) {
+            session(['url.intended' => $request->redirect_to]);
+        }
+
         return view('pages.login');
     }
+
 
     public function showRegistrationForm()
     {
@@ -76,18 +81,21 @@ class UserController extends Controller
                 ]);
             }
 
+            // Redirect the user to their intended destination (or to the default home page if none is found).
             return redirect()->intended('/')->with([
                 'message' => 'You have successfully logged in.',
                 'alert-type' => 'success'
             ]);
         }
 
-        return back()->with([
-            'message' => 'Incorrect password.',
-            'email' => $credentials['email'],
-            'alert-type' => 'error'
-        ]);
+        // If authentication fails, return back to the login form with input and error message.
+        return back()->withInput($request->only('email', 'remember'))
+            ->withErrors([
+                'password' => 'The provided credentials do not match our records.',
+            ]);
     }
+
+
 
     public function logout(Request $request)
     {
