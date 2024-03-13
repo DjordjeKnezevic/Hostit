@@ -12,21 +12,16 @@
 
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav  ml-auto">
-                    <li class="nav-item active">
-                        <a class="nav-link" href="{{ route('index') }}">Home <span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('about') }}"> About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('server') }}">Servers</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('price') }}">Pricing</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('contact') }}">Contact Us</a>
-                    </li>
+                    @foreach ($navLinks as $link)
+                        <li class="nav-item {{ Request::routeIs($link['route']) ? 'active' : '' }}">
+                            <a class="nav-link" href="{{ route($link['route']) }}">
+                                {{ $link['name'] }}
+                                @if (Request::routeIs($link['route']))
+                                    <span class="sr-only">(current)</span>
+                                @endif
+                            </a>
+                        </li>
+                    @endforeach
                 </ul>
                 <div class="quote_btn-container">
                     @if (Auth::user() && Auth::user()->hasVerifiedEmail())

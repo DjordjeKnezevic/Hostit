@@ -33,9 +33,15 @@
                                 and secure. We offer 24/7 support and a 99.9% uptime guarantee.
                             </p>
                         </div>
-                        <a href="">
-                            Go to renting page
-                        </a>
+                        @if (Auth::user() && Auth::user()->hasVerifiedEmail())
+                            <a href="{{ route('rent-server') }}">
+                                Go to renting page
+                            </a>
+                        @else
+                            <a href="{{ route('login') }}">
+                                Go to renting page
+                            </a>
+                        @endif
                     </div>
                 </div>
             </div>

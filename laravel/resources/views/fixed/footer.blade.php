@@ -47,26 +47,15 @@
                     <div class="info_link_box">
                         <h4>Links</h4>
                         <div class="info_links">
-                            <a class="{{ Route::currentRouteName() == 'index' ? 'active' : '' }}"
-                                href="{{ route('index') }}">
-                                <img src="{{ Storage::url('img/nav-bullet.png') }}" alt=""> Home
-                            </a>
-                            <a class="{{ Route::currentRouteName() == 'about' ? 'active' : '' }}"
-                                href="{{ route('about') }}">
-                                <img src="{{ Storage::url('img/nav-bullet.png') }}" alt=""> About
-                            </a>
-                            <a class="{{ Route::currentRouteName() == 'server' ? 'active' : '' }}"
-                                href="{{ route('server') }}">
-                                <img src="{{ Storage::url('img/nav-bullet.png') }}" alt=""> Servers
-                            </a>
-                            <a class="{{ Route::currentRouteName() == 'price' ? 'active' : '' }}"
-                                href="{{ route('price') }}">
-                                <img src="{{ Storage::url('img/nav-bullet.png') }}" alt=""> Pricing
-                            </a>
-                            <a class="{{ Route::currentRouteName() == 'contact' ? 'active' : '' }}"
-                                href="{{ route('contact') }}">
-                                <img src="{{ Storage::url('img/nav-bullet.png') }}" alt=""> Contact Us
-                            </a>
+                            @foreach ($navLinks as $link)
+                                <a class="{{ Route::currentRouteName() == $link['route'] ? 'active' : '' }}"
+                                    href="{{ route($link['route']) }}">
+                                    @if (!empty($link['icon']))
+                                        <img src="{{ Storage::url($link['icon']) }}" alt="">
+                                    @endif
+                                    {{ $link['name'] }}
+                                </a>
+                            @endforeach
                         </div>
                     </div>
                 </div>
