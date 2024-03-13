@@ -5,7 +5,7 @@ use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ServerController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
@@ -44,17 +44,17 @@ Route::get('/about', function () {
     return view('pages.about', compact('locations'));
 })->name('about');
 
-Route::get('/login', [UserController::class, 'showLoginForm'])->name('showLogin');
-Route::get('/register', [UserController::class, 'showRegistrationForm'])->name('showRegister');
-Route::post('/register', [UserController::class, 'register'])->name('register');
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('showLogin');
+Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('showRegister');
+Route::post('/register', [AuthController::class, 'register'])->name('register');
 
-Route::post('/login', [UserController::class, 'login'])->name('login');
-Route::middleware(['auth', 'verified'])->post('/logout', [UserController::class, 'logout'])->name('logout');
+Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::middleware(['auth', 'verified'])->post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
 
-    return redirect('/');
+    return redirect('/')->with('status', 'Email verified!');
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 Route::get('/email/verify', function () {
@@ -80,7 +80,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/location-details/{location}', [ServerController::class, 'locationDetails'])->name('location-details');
     Route::get('/server-details/{server}', [ServerController::class, 'serverDetails'])->name('server-details');
     Route::get('/pricing-details/{pricing}', [ServerController::class, 'pricingDetails'])->name('pricing-details');
-    Route::post('/process-renting', [ServerController::class, 'processRenting'])->name('process-renting');
 });
 
-Route::middleware('auth')->get('/profile', [ProfileController::class, 'index'])->name('profile');
+Route::middleware('auth')->group(function () {
+    Route::middleware('auth')->get('/profile', [ProfileController::class, 'index'])->name('profile');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('/process-renting', [ProfileController::class, 'processRenting'])->name('process-renting');
+    Route::get('/user/servers', [ProfileController::class, 'showServers'])->name('user-servers');
+    Route::put('/user/servers/server-stop/{server}', [ProfileController::class, 'stopServer'])->name('server-stop');
+    Route::put('/user/servers/server-start/{server}', [ProfileController::class, 'startServer'])->name('server-start');
+    Route::put('/user/servers/server-restart/{server}', [ProfileController::class, 'restartServer'])->name('server-restart');
+    Route::post('/user/servers/server-terminate/{server}', [ProfileController::class, 'terminateServer'])->name('server-terminate');
+});

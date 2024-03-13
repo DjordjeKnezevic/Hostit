@@ -37,6 +37,9 @@
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="{{ route('profile') }}">
+                                    My profile
+                                </a>
                                 <a class="dropdown-item" href="{{ route('rent-server') }}">
                                     Rent a server
                                 </a>

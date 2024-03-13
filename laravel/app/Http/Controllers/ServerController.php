@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Server;
 use App\Models\Pricing;
 use App\Models\Location;
-use App\Models\Subscription;
 use Illuminate\Http\Request;
 
 class ServerController extends Controller
@@ -91,31 +90,5 @@ class ServerController extends Controller
     {
         $pricing = Pricing::findOrFail($pricingId);
         return view('partials.pricing_details', compact('pricing'));
-    }
-
-
-    public function processRenting(Request $request)
-    {
-        $validatedData = $request->validate([
-            'location' => 'required|exists:locations,id',
-            'server' => 'required|exists:servers,id',
-            'pricing' => 'required|exists:pricing,id'
-        ]);
-
-        $user = auth()->user();
-        $server = Server::findOrFail($validatedData['server']);
-        $pricing = Pricing::findOrFail($validatedData['pricing']);
-
-        $subscription = new Subscription([
-            'user_id' => $user->id,
-            'service_id' => $server->id,
-            'service_type' => 'App\Models\Server',
-            'pricing_id' => $pricing->id,
-            'start_date' => now(),
-        ]);
-
-        $subscription->save();
-
-        return redirect()->route('profile')->with('status', 'Server rental successful.');
     }
 }

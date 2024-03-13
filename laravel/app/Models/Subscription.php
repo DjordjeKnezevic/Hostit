@@ -9,6 +9,8 @@ class Subscription extends Model
 {
     use HasFactory;
 
+    protected $dates = ['start_date', 'end_date'];
+
     protected $fillable = [
         'user_id', 'service_id', 'service_type', 'pricing_id', 'start_date', 'end_date'
     ];
@@ -26,5 +28,10 @@ class Subscription extends Model
     public function service()
     {
         return $this->morphTo(__FUNCTION__, 'service_type', 'service_id');
+    }
+
+    public function serverStatus()
+    {
+        return $this->hasOne(ServerStatus::class);
     }
 }

@@ -1017,7 +1017,6 @@ a:focus {
   background-color: transparent;
   color: #ff4646;
 }
-
 /* end info section */
 /* footer section*/
 .footer_section {
@@ -1123,4 +1122,72 @@ sup {
 
 .toast {
     opacity: 1 !important;
+}
+
+.server-block {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: rgba(2, 2, 48, 1);
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+}
+
+.server-wrapper {
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom: 1px solid white;
+    padding-bottom: 20px;
+}
+
+.server-info, .server-specs, .server-status {
+    flex: 1;
+}
+
+.server-status {
+    margin-top: 20px; /* Adjust as needed for visual alignment */
+}
+
+/* ... other styles remain unchanged ... */
+
+
+.server-block h3 {
+    margin-bottom: 0.5rem;
+    font-size: 1.5rem;
+    color: #7991a8;
+}
+
+.server-block .server-info {
+    border-right: 1px solid white;
+}
+.server-block .server-info p,
+.server-block .server-specs p,
+.server-block .server-status span,
+.server-block .server-status p {
+    color: #c4c4c5;
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+}
+
+.server-block .server-specs {
+    text-align: right;
+    height: 100%;
+}
+
+.server-specs h5 {
+    color: #7991a8;
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.server-block .server-status {
+    height: 100% !important;
 }

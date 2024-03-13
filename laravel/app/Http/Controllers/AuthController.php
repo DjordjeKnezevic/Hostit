@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
 
-class UserController extends Controller
+class AuthController extends Controller
 {
     public function showLoginForm(Request $request)
     {
@@ -82,7 +82,7 @@ class UserController extends Controller
             }
 
             // Redirect the user to their intended destination (or to the default home page if none is found).
-            return redirect()->intended('/')->with([
+            return redirect()->intended('/profile')->with([
                 'message' => 'You have successfully logged in.',
                 'alert-type' => 'success'
             ]);

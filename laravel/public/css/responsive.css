@@ -133,3 +133,15 @@
     max-width: 1170px;
   }
 }
+
+@media (max-width: 768px) {
+    .server-block {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .server-block .server-specs {
+        text-align: center;
+        margin-top: 20px;
+    }
+}
