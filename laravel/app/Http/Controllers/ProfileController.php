@@ -20,7 +20,7 @@ class ProfileController extends Controller
         $servers = null;
         $user = auth()->user();
         if (Auth::user()->hasVerifiedEmail()) {
-            $servers = $this->fetchAllUserServers($user->id);
+            $servers = $this->fetchUserServers($user->id);
         }
         return view('pages.profile', compact('servers'));
     }
@@ -94,21 +94,49 @@ class ProfileController extends Controller
         return redirect()->route('profile')->with('status', 'Server rental successful.');
     }
 
-    public function showRentedServers()
+    public function showRentedServers(Request $request)
     {
         $user = auth()->user();
-        $servers = $this->fetchAllUserServers($user->id);
+        $servers = $this->fetchUserServers($user->id);
 
         return view('components.servers', compact('servers'));
     }
 
-    protected function fetchAllUserServers($id)
+    public function filterRentedServers(Request $request)
+    {
+        $user = auth()->user();
+        $stateFilter = $request->input('state');
+        $locationFilter = $request->input('location');
+        $sortOrder = $request->input('sort', 'desc');
+        $servers = $this->fetchUserServers($user->id, $stateFilter, $locationFilter, $sortOrder);
+
+        return view('components.servers-list', compact('servers'));
+    }
+    protected function fetchUserServers($id, $stateFilter = null, $locationFilter = null, $sortOrder = 'desc')
     {
         $servers = Subscription::where('user_id', $id)
             ->where('service_type', 'App\Models\Server')
             ->with(['service', 'pricing', 'serverStatus'])
-            ->get();
+            ->when($stateFilter, function ($query, $stateFilter) {
+                return $query->whereHas('serverStatus', function ($query) use ($stateFilter) {
+                    return $query->where('status', $stateFilter);
+                });
+            })
+            ->when($locationFilter, function ($query, $locationFilter) {
+                return $query->whereHas('service', function ($query) use ($locationFilter) {
+                    return $query->where('location_id', $locationFilter);
+                });
+            })
+            ->orderBy('start_date', $sortOrder)
+            ->paginate(3);
 
+        $servers->withPath(route('filter-servers'));
+        // $servers = $servers->appends([
+        //     'state' => $stateFilter,
+        //     'location' => $locationFilter,
+        //     'sort' => $sortOrder,
+        // ]);
+        $servers = $servers->appends(request()->except('page'));
         return $servers;
     }
 
@@ -129,13 +157,6 @@ class ProfileController extends Controller
             'last_stopped_at' => null,
         ]);
 
-        $regionResource = RegionResource::where('location_id', $subscription->service->location_id)->first();
-        $regionResource->remaining_cpu_cores -= $subscription->service->serverType->cpu_cores;
-        $regionResource->remaining_ram -= $subscription->service->serverType->ram;
-        $regionResource->remaining_storage -= $subscription->service->serverType->storage;
-        $regionResource->remaining_bandwidth -= $subscription->service->serverType->network_speed;
-        $regionResource->save();
-
         return view('partials.server-status', ['subscription' => $subscription]);
     }
 
@@ -154,13 +175,6 @@ class ProfileController extends Controller
             'status' => 'stopped',
             'last_stopped_at' => $now,
         ]);
-
-        $regionResource = RegionResource::where('location_id', $subscription->service->location_id)->first();
-        $regionResource->remaining_cpu_cores += $subscription->service->serverType->cpu_cores;
-        $regionResource->remaining_ram += $subscription->service->serverType->ram;
-        $regionResource->remaining_storage += $subscription->service->serverType->storage;
-        $regionResource->remaining_bandwidth += $subscription->service->serverType->network_speed;
-        $regionResource->save();
 
         return view('partials.server-status', ['subscription' => $subscription]);
     }

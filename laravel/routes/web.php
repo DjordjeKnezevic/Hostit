@@ -9,6 +9,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ServerController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\MailingListController;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
@@ -88,9 +89,12 @@ Route::middleware('auth')->group(function () {
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/process-renting', [ProfileController::class, 'processRenting'])->name('process-renting');
-    Route::get('/user/servers', [ProfileController::class, 'showServers'])->name('user-servers');
+    Route::get('/user/servers', [ProfileController::class, 'showRentedServers'])->name('user-servers');
+    Route::get('/user/servers/filter', [ProfileController::class, 'filterRentedServers'])->name('filter-servers');
     Route::put('/user/servers/server-stop/{server}', [ProfileController::class, 'stopServer'])->name('server-stop');
     Route::put('/user/servers/server-start/{server}', [ProfileController::class, 'startServer'])->name('server-start');
     Route::put('/user/servers/server-restart/{server}', [ProfileController::class, 'restartServer'])->name('server-restart');
     Route::post('/user/servers/server-terminate/{server}', [ProfileController::class, 'terminateServer'])->name('server-terminate');
 });
+
+Route::post('/subscribe', [MailingListController::class, 'subscribe'])->name('subscribe');

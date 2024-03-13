@@ -5,7 +5,6 @@
 @section('content')
     <div class="container-fluid">
         <div class="row">
-            <!-- Sidebar -->
             <nav class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
                 <div class="position-sticky pt-3">
                     <h3>Profile</h3>
@@ -26,7 +25,6 @@
                 </div>
             </nav>
 
-            <!-- Content -->
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" id="content">
                 <div class="pt-3">
                     @if ($servers)

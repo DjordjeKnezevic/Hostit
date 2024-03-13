@@ -36,11 +36,23 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $validatedData = $request->validate([
+        $messages = [
+            'password.required' => 'The password field is required.',
+            'password.min' => 'The password must be at least 6 characters.',
+            'password.regex' => 'The password must contain at least one uppercase letter and one number.',
+        ];
+
+        $rules = [
             'name' => 'required|max:255|min:3',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:6',
-        ]);
+            'password' => [
+                'required',
+                'min:6',
+                'regex:/^(?=.*[A-Z])(?=.*[0-9]).+$/',
+            ],
+        ];
+
+        $validatedData = $request->validate($rules, $messages);
 
         $role = Role::where('name', 'User')->first();
 

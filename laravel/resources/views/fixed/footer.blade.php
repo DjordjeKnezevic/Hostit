@@ -60,14 +60,11 @@
                     </div>
                 </div>
                 <div class="col-md-4 mb-0">
-                    <h4>
-                        Subscribe
-                    </h4>
-                    <form action="#">
-                        <input type="text" placeholder="Enter email" />
-                        <button type="submit">
-                            Subscribe
-                        </button>
+                    <h4>Subscribe to our mailing list</h4>
+                    <form action="/subscribe" method="POST">
+                        @csrf
+                        <input type="text" name="email" placeholder="Enter email" />
+                        <button type="submit">Subscribe</button>
                     </form>
                 </div>
             </div>
