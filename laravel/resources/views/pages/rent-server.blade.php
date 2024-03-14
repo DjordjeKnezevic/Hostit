@@ -195,7 +195,8 @@
                         .then(html => {
                             serverList.innerHTML = html;
                             const serverNameElement = serverList.querySelector('.server-name');
-                            selectedServerName = serverNameElement ? serverNameElement.textContent : '';
+                            selectedServerName = serverNameElement ? serverNameElement.textContent
+                                .split(': ')[1] : '';
                             updateModalText();
                         });
                 } else {

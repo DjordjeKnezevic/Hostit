@@ -6,16 +6,15 @@
             <div class="col-md-4 mb-3 d-flex justify-content-around">
                 <select name="state" class="form-select" style="border-radius: .25rem; border: 1px solid #ced4da;">
                     <option value="">Select State</option>
-                    <option value="good">Good</option>
-                    <option value="pending">Pending</option>
-                    <option value="down">Down</option>
-                    <option value="stopped">Stopped</option>
+                    @foreach ($states as $state)
+                        <option value="{{ $state }}">{{ ucfirst($state) }}</option>
+                    @endforeach
                 </select>
             </div>
             <div class="col-md-4 mb-3">
                 <select name="location" class="form-select" style="border-radius: .25rem; border: 1px solid #ced4da;">
                     <option value="">Select Location</option>
-                    @foreach (App\Models\Location::all() as $location)
+                    @foreach ($locations as $location)
                         <option value="{{ $location->id }}">{{ $location->name }}</option>
                     @endforeach
                 </select>
@@ -26,16 +25,22 @@
                     <option value="asc">Oldest First</option>
                 </select>
             </div>
+            <div class="col-12">
+                <a href="{{ route('filter-servers') }}" hx-get="{{ route('filter-servers') }}"
+                    hx-target="#serversContainer" hx-trigger="click" class="btn btn-secondary mt-3"
+                    id="clearFilters">Clear Filters</a>
+            </div>
         </form>
     </div>
-
-
-    <!-- Server list container -->
     <div id="serversContainer">
         @include('components.servers-list', ['servers' => $servers])
     </div>
-
-    <!-- Pagination links with dynamic rendering -->
-
-
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('clearFilters').addEventListener('click', function() {
+            document.getElementById('filterForm').reset();
+        });
+    });
+</script>

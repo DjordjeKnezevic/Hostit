@@ -26,6 +26,7 @@ class DatabaseSeeder extends Seeder
             ServersTableSeeder::class,
             PricingTableSeeder::class,
             RegionResourcesTableSeeder::class,
+            NavigationLinksTableSeeder::class,
         ]);
     }
 }

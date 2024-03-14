@@ -13,14 +13,16 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav  ml-auto">
                     @foreach ($navLinks as $link)
-                        <li class="nav-item {{ Request::routeIs($link['route']) ? 'active' : '' }}">
-                            <a class="nav-link" href="{{ route($link['route']) }}">
-                                {{ $link['name'] }}
-                                @if (Request::routeIs($link['route']))
-                                    <span class="sr-only">(current)</span>
-                                @endif
-                            </a>
-                        </li>
+                        @unless ($link->is_footer)
+                            <li class="nav-item {{ Request::routeIs($link['route']) ? 'active' : '' }}">
+                                <a class="nav-link" href="{{ route($link['route']) }}">
+                                    {{ $link['name'] }}
+                                    @if (Request::routeIs($link['route']))
+                                        <span class="sr-only">(current)</span>
+                                    @endif
+                                </a>
+                            </li>
+                        @endunless
                     @endforeach
                 </ul>
                 <div class="quote_btn-container">

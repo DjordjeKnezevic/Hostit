@@ -10,14 +10,14 @@
                     <h3>Profile</h3>
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#" hx-get="{{ route('user-servers') }}"
+                            <a class="nav-link" href="#" id="nav-servers" hx-get="{{ route('user-servers') }}"
                                 hx-target="#content" hx-swap="innerHTML">
                                 Servers
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#" hx-get="/user/invoices" hx-target="#content"
-                                hx-swap="innerHTML">
+                            <a class="nav-link" href="#" id="nav-invoices" hx-get="{{ route('user-invoices') }}"
+                                hx-target="#content" hx-swap="innerHTML">
                                 Invoices
                             </a>
                         </li>
@@ -28,10 +28,14 @@
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4" id="content">
                 <div class="pt-3">
                     @if ($servers)
-                        @include('components.servers', ['servers' => $servers])
+                        @include('components.servers', [
+                            'servers' => $servers,
+                            'locations' => $locations,
+                            'states' => $states,
+                        ])
                     @else
                         <h2>Welcome to your profile</h2>
-                        <p>Select an option from the menu to get started.</p>
+                        <p>Here you can see your servers and invoices</p>
                     @endif
                 </div>
             </main>
@@ -39,6 +43,24 @@
     </div>
 @endsection
 
+@push('scripts')
+    <script>
+        document.addEventListener('htmx:afterSwap', function() {
+            // Remove 'active' class from all nav links
+            document.querySelectorAll('.nav-link').forEach(function(link) {
+                link.classList.remove('active');
+            });
+
+            // Add 'active' class to the clicked nav link
+            let currentUrl = window.location.href;
+            if (currentUrl.includes('user-servers')) {
+                document.getElementById('nav-servers').classList.add('active');
+            } else if (currentUrl.includes('user-invoices')) {
+                document.getElementById('nav-invoices').classList.add('active');
+            }
+        });
+    </script>
+@endpush
 
 @push('styles')
     <style>

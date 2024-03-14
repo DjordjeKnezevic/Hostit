@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use App\Models\NavigationLink;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,13 +23,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $navLinks = [
-            ['name' => 'Home', 'route' => 'index', 'icon' => 'img/nav-bullet.png'],
-            ['name' => 'About', 'route' => 'about', 'icon' => 'img/nav-bullet.png'],
-            ['name' => 'Servers', 'route' => 'server', 'icon' => 'img/nav-bullet.png'],
-            ['name' => 'Pricing', 'route' => 'price', 'icon' => 'img/nav-bullet.png'],
-            ['name' => 'Contact Us', 'route' => 'contact', 'icon' => 'img/nav-bullet.png'],
-        ];
+        $navLinks = NavigationLink::all();
 
         View::share('navLinks', $navLinks);
     }

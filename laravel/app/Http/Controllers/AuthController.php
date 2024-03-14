@@ -13,10 +13,6 @@ class AuthController extends Controller
 {
     public function showLoginForm(Request $request)
     {
-        if (Auth::check() && Auth::user()->hasVerifiedEmail()) {
-            return redirect()->route('index');
-        }
-
         if ($request->has('redirect_to')) {
             session(['url.intended' => $request->redirect_to]);
         }
@@ -27,10 +23,6 @@ class AuthController extends Controller
 
     public function showRegistrationForm()
     {
-        if (Auth::check() && Auth::user()->hasVerifiedEmail()) {
-            return redirect()->route('index');
-        }
-
         return view('pages.register');
     }
 

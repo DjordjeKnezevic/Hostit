@@ -48,8 +48,8 @@
                         <h4>Links</h4>
                         <div class="info_links">
                             @foreach ($navLinks as $link)
-                                <a class="{{ Route::currentRouteName() == $link['route'] ? 'active' : '' }}"
-                                    href="{{ route($link['route']) }}">
+                                <a class="{{ Request::url() == $link['route'] || Request::url() == url($link['route']) ? 'active' : '' }}"
+                                    href="{{ Str::startsWith($link['route'], ['http://', 'https://', '/']) ? $link['route'] : route($link['route']) }}">
                                     @if (!empty($link['icon']))
                                         <img src="{{ Storage::url($link['icon']) }}" alt="">
                                     @endif

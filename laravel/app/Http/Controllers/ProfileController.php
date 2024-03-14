@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use App\Models\Server;
 use App\Models\Invoice;
+use App\Models\Location;
 use App\Models\Pricing;
 use App\Models\ServerStatus;
 use App\Models\Subscription;
@@ -21,8 +22,10 @@ class ProfileController extends Controller
         $user = auth()->user();
         if (Auth::user()->hasVerifiedEmail()) {
             $servers = $this->fetchUserServers($user->id);
+            $locations = Location::all();
+            $states = ServerStatus::STATUSES;
         }
-        return view('pages.profile', compact('servers'));
+        return view('pages.profile', compact('servers', 'locations', 'states'));
     }
 
     public function processRenting(Request $request)
@@ -98,8 +101,10 @@ class ProfileController extends Controller
     {
         $user = auth()->user();
         $servers = $this->fetchUserServers($user->id);
+        $locations = Location::all();
+        $states = ServerStatus::STATUSES;
 
-        return view('components.servers', compact('servers'));
+        return view('components.servers', compact('servers', 'locations', 'states'));
     }
 
     public function filterRentedServers(Request $request)
@@ -210,5 +215,61 @@ class ProfileController extends Controller
         // session()->flash('alert-type', 'success');
 
         return view('partials.server-status', ['subscription' => $subscription]);
+    }
+
+    private function updateServerUptime(ServerStatus $serverStatus)
+    {
+        if ($serverStatus->status === 'good' && $serverStatus->last_started_at) {
+            $uptimeInSeconds = now()->diffInSeconds($serverStatus->updated_at);
+            $serverStatus->increment('uptime', $uptimeInSeconds);
+        }
+    }
+
+    private function calculateHourlyCost(Subscription $subscription, $additionalUptime)
+    {
+        $hourlyRate = $subscription->pricing->where('period', 'hourly')->first()->price ?? 0;
+
+        $hours = $additionalUptime / 3600;
+        $cost = $hours * $hourlyRate;
+
+        return $cost;
+    }
+
+    public function showInvoices(Request $request)
+    {
+        $user = auth()->user();
+
+        $month = $request->input('month', now()->month);
+        $year = $request->input('year', now()->year);
+
+        $invoices = Invoice::whereHas('subscription', function ($query) use ($user) {
+            $query->where('user_id', $user->id);
+        })
+            ->whereYear('due_date', $year)
+            ->whereMonth('due_date', $month)
+            ->get();
+
+        foreach ($invoices as $invoice) {
+            $serverStatus = $invoice->subscription->serverStatus;
+            $pricing = $invoice->subscription->service->pricing->where('period', 'hourly')->first();
+            if ($serverStatus && $serverStatus->status === 'good' && $pricing) {
+                $uptimeInSeconds = now()->diffInSeconds($serverStatus->updated_at);
+                $serverStatus->increment('uptime', $uptimeInSeconds);
+
+                $hours = $serverStatus->uptime / 3600;
+                $invoice->amount_due += $hours * $pricing->price;
+            }
+        }
+
+        $invoicesByLocation = $invoices->groupBy(function ($item) {
+            return $item->subscription->service->location_id;
+        })->map(function ($items) {
+            return [
+                'total_amount_due' => $items->sum('amount_due'),
+                'invoices' => $items
+            ];
+        });
+
+        return view('components.invoices', compact('invoicesByLocation', 'month', 'year'));
     }
 }

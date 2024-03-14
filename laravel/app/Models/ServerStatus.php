@@ -13,6 +13,8 @@ class ServerStatus extends Model
 
     protected $dates = ['last_started_at', 'last_stopped_at', 'last_crashed_at'];
 
+    public const STATUSES = ['good', 'pending', 'down', 'stopped', 'terminated'];
+
     public function subscription()
     {
         return $this->belongsTo(Subscription::class);

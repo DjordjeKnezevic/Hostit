@@ -12,6 +12,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\MailingListController;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -45,11 +46,14 @@ Route::get('/about', function () {
     return view('pages.about', compact('locations'));
 })->name('about');
 
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('showLogin');
-Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('showRegister');
-Route::post('/register', [AuthController::class, 'register'])->name('register');
 
-Route::post('/login', [AuthController::class, 'login'])->name('login');
+Route::middleware('unauth')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('showLogin');
+    Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('showRegister');
+    Route::post('/register', [AuthController::class, 'register'])->name('register');
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
+});
+
 Route::middleware(['auth', 'verified'])->post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
@@ -95,6 +99,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/user/servers/server-start/{server}', [ProfileController::class, 'startServer'])->name('server-start');
     Route::put('/user/servers/server-restart/{server}', [ProfileController::class, 'restartServer'])->name('server-restart');
     Route::post('/user/servers/server-terminate/{server}', [ProfileController::class, 'terminateServer'])->name('server-terminate');
+
+    Route::get('/user/invoices', [ProfileController::class, 'showInvoices'])->name('user-invoices');
 });
 
 Route::post('/subscribe', [MailingListController::class, 'subscribe'])->name('subscribe');

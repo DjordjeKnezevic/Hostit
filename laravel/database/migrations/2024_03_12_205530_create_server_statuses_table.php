@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('server_statuses', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('subscription_id')->unique();
-            $table->string('status');
+            $table->enum('status', ['good', 'pending', 'down', 'stopped', 'terminated']);
             $table->unsignedBigInteger('uptime')->default(0);
             $table->unsignedBigInteger('downtime')->default(0);
             $table->timestamp('last_started_at')->nullable();
