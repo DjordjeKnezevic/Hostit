@@ -81,7 +81,7 @@ class ProfileController extends Controller
 
             Invoice::create([
                 'subscription_id' => $subscription->id,
-                'amount_due' => $pricing->price,
+                'amount_due' => 0,
                 'amount_paid' => $pricing->period === 'hourly' ? 0 : $pricing->price,
                 'due_date' => $dueDate,
                 'status' => $status,
@@ -217,30 +217,91 @@ class ProfileController extends Controller
         return view('partials.server-status', ['subscription' => $subscription]);
     }
 
-    private function updateServerUptime(ServerStatus $serverStatus)
+    public function showInvoicePage(Request $request)
     {
-        if ($serverStatus->status === 'good' && $serverStatus->last_started_at) {
+        $year = $request->input('year', now()->year);
+        $month = $request->input('month', now()->month);
+        $sortBy = $request->input('sortBy', 'total_amount_due');
+
+        $distinctDates = $this->getDistinctDates();
+        $invoicesByLocation = $this->fetchInvoices($year, $month, $sortBy);
+        list($totalDue, $totalPaid) = $this->calculateTotals($invoicesByLocation);
+
+        $locations = Location::all()->keyBy('id');
+
+        $formattedDates = $distinctDates->mapWithKeys(function ($date) {
+            $carbonDate = Carbon::create($date->year, $date->month);
+            return [$date->year . '-' . $date->month => $carbonDate->format('F Y')];
+        });
+
+        return view('components.invoices', compact(
+            'invoicesByLocation',
+            'distinctDates',
+            'month',
+            'year',
+            'totalDue',
+            'totalPaid',
+            'locations',
+            'formattedDates'
+        ));
+    }
+
+    public function updateInvoiceList(Request $request)
+    {
+        $monthYear = $request->input('monthYear', now()->format('Y-m'));
+        [$year, $month] = explode('-', $monthYear);
+        $sortBy = $request->input('sortBy', 'total_amount_due');
+
+        $invoicesByLocation = $this->fetchInvoices($year, $month, $sortBy);
+        list($totalDue, $totalPaid) = $this->calculateTotals($invoicesByLocation);
+
+        $locations = Location::all()->keyBy('id');
+
+        return view('components.invoices-list', compact('invoicesByLocation', 'totalDue', 'totalPaid', 'locations'));
+    }
+
+    private function getDistinctDates()
+    {
+        return  Invoice::selectRaw('YEAR(due_date) as year, MONTH(due_date) as month')
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->orderBy('month', 'desc')
+            ->get();
+    }
+
+    private function calculateTotals($invoicesByLocation)
+    {
+        $totalDue = $invoicesByLocation->sum('total_amount_due');
+        $totalPaid = $invoicesByLocation->sum('total_amount_paid');
+        return [$totalDue, $totalPaid];
+    }
+
+    private function sortInvoicesByLocation($invoicesByLocation, $sortBy)
+    {
+        $sortByColumn = $sortBy === 'amount_paid' ? 'total_amount_paid' : 'total_amount_due';
+
+        return $invoicesByLocation->sortByDesc(function ($locationData) use ($sortByColumn) {
+            return $locationData[$sortByColumn];
+        });
+    }
+
+    private function updateInvoiceAmount($invoice)
+    {
+        $serverStatus = $invoice->subscription->serverStatus;
+        $pricing = $invoice->subscription->pricing;
+        if ($serverStatus->status === 'good' && $pricing->period == 'hourly') {
             $uptimeInSeconds = now()->diffInSeconds($serverStatus->updated_at);
             $serverStatus->increment('uptime', $uptimeInSeconds);
+
+            $hours = $serverStatus->uptime / 3600;
+            $invoice->amount_due = $hours * $pricing->price;
+            $invoice->save();
         }
     }
 
-    private function calculateHourlyCost(Subscription $subscription, $additionalUptime)
-    {
-        $hourlyRate = $subscription->pricing->where('period', 'hourly')->first()->price ?? 0;
-
-        $hours = $additionalUptime / 3600;
-        $cost = $hours * $hourlyRate;
-
-        return $cost;
-    }
-
-    public function showInvoices(Request $request)
+    private function fetchInvoices($year, $month, $sortBy)
     {
         $user = auth()->user();
-
-        $month = $request->input('month', now()->month);
-        $year = $request->input('year', now()->year);
 
         $invoices = Invoice::whereHas('subscription', function ($query) use ($user) {
             $query->where('user_id', $user->id);
@@ -250,15 +311,7 @@ class ProfileController extends Controller
             ->get();
 
         foreach ($invoices as $invoice) {
-            $serverStatus = $invoice->subscription->serverStatus;
-            $pricing = $invoice->subscription->service->pricing->where('period', 'hourly')->first();
-            if ($serverStatus && $serverStatus->status === 'good' && $pricing) {
-                $uptimeInSeconds = now()->diffInSeconds($serverStatus->updated_at);
-                $serverStatus->increment('uptime', $uptimeInSeconds);
-
-                $hours = $serverStatus->uptime / 3600;
-                $invoice->amount_due += $hours * $pricing->price;
-            }
+            $this->updateInvoiceAmount($invoice);
         }
 
         $invoicesByLocation = $invoices->groupBy(function ($item) {
@@ -266,10 +319,11 @@ class ProfileController extends Controller
         })->map(function ($items) {
             return [
                 'total_amount_due' => $items->sum('amount_due'),
+                'total_amount_paid' => $items->sum('amount_paid'),
                 'invoices' => $items
             ];
         });
 
-        return view('components.invoices', compact('invoicesByLocation', 'month', 'year'));
+        return $this->sortInvoicesByLocation($invoicesByLocation, $sortBy);
     }
 }

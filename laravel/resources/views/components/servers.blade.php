@@ -4,7 +4,7 @@
         <form id="filterForm" hx-get="{{ route('filter-servers') }}" hx-target="#serversContainer"
             hx-trigger="change from:select" class="row">
             <div class="col-md-4 mb-3 d-flex justify-content-around">
-                <select name="state" class="form-select" style="border-radius: .25rem; border: 1px solid #ced4da;">
+                <select name="state" class="form-select">
                     <option value="">Select State</option>
                     @foreach ($states as $state)
                         <option value="{{ $state }}">{{ ucfirst($state) }}</option>
@@ -12,7 +12,7 @@
                 </select>
             </div>
             <div class="col-md-4 mb-3">
-                <select name="location" class="form-select" style="border-radius: .25rem; border: 1px solid #ced4da;">
+                <select name="location" class="form-select">
                     <option value="">Select Location</option>
                     @foreach ($locations as $location)
                         <option value="{{ $location->id }}">{{ $location->name }}</option>
@@ -20,7 +20,7 @@
                 </select>
             </div>
             <div class="col-md-4 mb-3">
-                <select name="sort" class="form-select" style="border-radius: .25rem; border: 1px solid #ced4da;">
+                <select name="sort" class="form-select">
                     <option value="desc" selected="selected">Newest First</option>
                     <option value="asc">Oldest First</option>
                 </select>

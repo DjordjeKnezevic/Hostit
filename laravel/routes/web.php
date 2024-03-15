@@ -100,7 +100,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/user/servers/server-restart/{server}', [ProfileController::class, 'restartServer'])->name('server-restart');
     Route::post('/user/servers/server-terminate/{server}', [ProfileController::class, 'terminateServer'])->name('server-terminate');
 
-    Route::get('/user/invoices', [ProfileController::class, 'showInvoices'])->name('user-invoices');
+    Route::get('/user/invoices', [ProfileController::class, 'showInvoicePage'])->name('user-invoices');
+    Route::get('/user/invoices/update', [ProfileController::class, 'updateInvoiceList'])->name('user-invoices-update');
 });
 
 Route::post('/subscribe', [MailingListController::class, 'subscribe'])->name('subscribe');
