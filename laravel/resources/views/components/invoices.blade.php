@@ -1,6 +1,6 @@
 <div class="container mt-4">
     <div class="p-3 mb-4 bg-white rounded shadow filters-wrapper">
-        <h4 class="mb-3" style="border-radius: .25rem; border: 1px solid #ced4da;">Invoices Filters</h4>
+        <h4 class="mb-3">Invoices Filters</h4>
         <form id="invoiceFiltersForm" hx-get="{{ route('user-invoices-update') }}" hx-target="#invoices-container"
             hx-trigger="change from:select" method="get">
             <div class="row">
@@ -30,6 +30,11 @@
                         @endforeach
                     </select>
                 </div>
+                <div class="col-12">
+                    <a href="{{ route('user-invoices-update') }}" hx-get="{{ route('user-invoices-update') }}"
+                        hx-target="#invoices-container" hx-trigger="click" class="btn btn-secondary mt-3"
+                        id="clearInvoicesFilters">Clear Filters</a>
+                </div>
             </div>
         </form>
     </div>
@@ -43,26 +48,11 @@
     </div>
 </div>
 
-
-
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.invoice-collapse-btn').forEach(function(button) {
-            button.addEventListener('click', function() {
-                var collapseTarget = document.querySelector(button.dataset.target);
-                if (collapseTarget) {
-                    collapseTarget.classList.toggle('show');
-                }
-            });
-        });
-        const invoiceFiltersForm = document.getElementById('invoiceFiltersForm');
-        invoiceFiltersForm.addEventListener('change', function() {
-            // Trigger htmx to make the AJAX call
-            hx.trigger('submit', invoiceFiltersForm);
-        });
+    document.getElementById('clearInvoicesFilters').addEventListener('click', function() {
+        document.getElementById('invoiceFiltersForm').reset();
     });
 </script>
-
 
 <style>
     .filters-wrapper {
