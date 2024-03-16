@@ -14,8 +14,21 @@ class Invoice extends Model
         'status',
     ];
 
+    const STATUS_PENDING = 'pending';
+    const STATUS_PAID = 'paid';
+    const STATUS_OVERDUE = 'overdue';
+
     public function subscription()
     {
         return $this->belongsTo(Subscription::class);
+    }
+
+    public static function getStatuses()
+    {
+        return [
+            self::STATUS_PENDING => 'Pending',
+            self::STATUS_PAID => 'Paid',
+            self::STATUS_OVERDUE => 'Overdue',
+        ];
     }
 }

@@ -219,12 +219,12 @@ class ProfileController extends Controller
 
     public function showInvoicePage(Request $request)
     {
-        $year = $request->input('year', now()->year);
-        $month = $request->input('month', now()->month);
-        $sortBy = $request->input('sortBy', 'total_amount_due');
-
+        $year = now()->year;
+        $month = now()->month;
         $distinctDates = $this->getDistinctDates();
-        $invoicesByLocation = $this->fetchInvoices($year, $month, $sortBy);
+        $statuses = Invoice::getStatuses();
+
+        $invoicesByLocation = $this->fetchInvoices($year, $month, $statuses);
         list($totalDue, $totalPaid) = $this->calculateTotals($invoicesByLocation);
 
         $locations = Location::all()->keyBy('id');
@@ -242,7 +242,8 @@ class ProfileController extends Controller
             'totalDue',
             'totalPaid',
             'locations',
-            'formattedDates'
+            'formattedDates',
+            'statuses'
         ));
     }
 
@@ -251,8 +252,10 @@ class ProfileController extends Controller
         $monthYear = $request->input('monthYear', now()->format('Y-m'));
         [$year, $month] = explode('-', $monthYear);
         $sortBy = $request->input('sortBy', 'total_amount_due');
+        $selectedStatus = $request->input('status');
+        $statuses = Invoice::getStatuses();
 
-        $invoicesByLocation = $this->fetchInvoices($year, $month, $sortBy);
+        $invoicesByLocation = $this->fetchInvoices($year, $month, $statuses, $sortBy, $selectedStatus);
         list($totalDue, $totalPaid) = $this->calculateTotals($invoicesByLocation);
 
         $locations = Location::all()->keyBy('id');
@@ -299,7 +302,7 @@ class ProfileController extends Controller
         }
     }
 
-    private function fetchInvoices($year, $month, $sortBy)
+    private function fetchInvoices($year, $month, $statuses, $sortBy = "total_amount_due", $status  = null)
     {
         $user = auth()->user();
 
@@ -307,9 +310,13 @@ class ProfileController extends Controller
             $query->where('user_id', $user->id);
         })
             ->whereYear('due_date', $year)
-            ->whereMonth('due_date', $month)
-            ->get();
+            ->whereMonth('due_date', $month);
 
+        if ($status !== null && array_key_exists($status, $statuses)) {
+            $invoices = $invoices->where('status', $status);
+        }
+
+        $invoices = $invoices->get();
         foreach ($invoices as $invoice) {
             $this->updateInvoiceAmount($invoice);
         }

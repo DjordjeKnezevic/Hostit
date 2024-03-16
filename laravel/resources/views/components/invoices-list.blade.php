@@ -2,10 +2,10 @@
 <h2>Total Paid: ${{ number_format($totalPaid, 2) }}</h2>
 
 @foreach ($invoicesByLocation as $locationId => $data)
-    <div class="invoice-block">
+    <div class="invoice-block w-100">
         <div class="invoice-wrapper">
             <div class="invoice-info">
-                <h5>{{ $locations[$locationId]->name ?? 'Unknown Location' }}</h5>
+                <h3>{{ $locations[$locationId]->name ?? 'Unknown Location' }}</h3>
             </div>
             <div class="invoice-financials">
                 <p>Total Due: ${{ number_format($data['total_amount_due'], 2) }}</p>
@@ -44,7 +44,7 @@
         justify-content: space-between;
         padding: 5px 0;
         border-bottom: 1px solid #ccc;
-        /* Or choose a color that fits the design */
+        align-items: center;
     }
 
     .server-invoice-financials {

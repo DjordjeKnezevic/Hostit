@@ -1,28 +1,39 @@
 <div class="container mt-4">
     <div class="p-3 mb-4 bg-white rounded shadow filters-wrapper">
-        <h4 class="mb-3" style="color: #495057;">Invoices Filters</h4>
-        <div class="row">
-            <div class="col-md-6 mb-3 d-flex justify-content-around">
-                <select name="monthYear" onchange="this.form.submit()" hx-get="{{ route('user-invoices-update') }}"
-                    hx-trigger="change" hx-target="#invoices-container">
-                    @foreach ($formattedDates as $value => $label)
-                        <option value="{{ $value }}" {{ $year . '-' . $month == $value ? 'selected' : '' }}>
-                            {{ $label }}
-                        </option>
-                    @endforeach
-                </select>
+        <h4 class="mb-3" style="border-radius: .25rem; border: 1px solid #ced4da;">Invoices Filters</h4>
+        <form id="invoiceFiltersForm" hx-get="{{ route('user-invoices-update') }}" hx-target="#invoices-container"
+            hx-trigger="change from:select" method="get">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <select name="monthYear" class="form-select"
+                        style="border-radius: .25rem; border: 1px solid #ced4da;">
+                        @foreach ($formattedDates as $value => $label)
+                            <option value="{{ $value }}" {{ $year . '-' . $month == $value ? 'selected' : '' }}>
+                                {{ $label }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <select name="sortBy" class="form-select"
+                        style="border-radius: .25rem; border: 1px solid #ced4da;">
+                        <option value="amount_due">Sort by Amount Due</option>
+                        <option value="amount_paid">Sort by Amount Paid</option>
+                    </select>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <select name="status" class="form-select"
+                        style="border-radius: .25rem; border: 1px solid #ced4da;">
+                        <option value="">Select Status</option>
+                        @foreach ($statuses as $key => $display)
+                            <option value="{{ $key }}">{{ $display }}</option>
+                        @endforeach
+                    </select>
+                </div>
             </div>
-            <div class="col-md-6 mb-3">
-                <select name="sortBy" onchange="this.form.submit()" hx-get="{{ route('user-invoices-update') }}"
-                    hx-trigger="change" hx-target="#invoices-container" class="form-select"
-                    style="border-radius: .25rem; border: 1px solid #ced4da;">
-                    <option value="amount_due">Sort by Amount Due</option>
-                    <option value="amount_paid">Sort by Amount Paid</option>
-                </select>
-            </div>
-        </div>
+        </form>
     </div>
-    <div id="invoices-container">
+    <div id="invoices-container" class="d-flex flex-column align-items-end">
         @include('components.invoices-list', [
             'invoicesByLocation' => $invoicesByLocation,
             'totalDue' => $totalDue,
@@ -31,6 +42,8 @@
         ])
     </div>
 </div>
+
+
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -41,6 +54,11 @@
                     collapseTarget.classList.toggle('show');
                 }
             });
+        });
+        const invoiceFiltersForm = document.getElementById('invoiceFiltersForm');
+        invoiceFiltersForm.addEventListener('change', function() {
+            // Trigger htmx to make the AJAX call
+            hx.trigger('submit', invoiceFiltersForm);
         });
     });
 </script>
@@ -91,10 +109,9 @@
         padding-bottom: 20px;
     }
 
-    .invoice-info h5,
+    .invoice-info h3,
     .invoice-financials p {
         color: #c4c4c5;
-        font-size: 0.9rem;
         margin-bottom: 0.25rem;
     }
 
