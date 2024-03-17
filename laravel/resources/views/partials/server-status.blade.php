@@ -40,13 +40,8 @@
     </div>
 </div>
 
-@push('scripts')
+@if (session('success'))
     <script>
-        document.body.addEventListener('htmx:afterSwap', (event) => {
-            const noActionsText = "No actions available for this server";
-            if (event.detail.target.innerHTML.includes(noActionsText)) {
-                toastr.success('Server terminated successfully');
-            }
-        });
+        toastr.success('{{ session('success') }}');
     </script>
-@endpush
+@endif

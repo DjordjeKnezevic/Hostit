@@ -13,7 +13,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav  ml-auto">
                     @foreach ($navLinks as $link)
-                        @unless ($link->is_footer)
+                        @if ($link->is_navbar)
                             <li class="nav-item {{ Request::routeIs($link['route']) ? 'active' : '' }}">
                                 <a class="nav-link" href="{{ route($link['route']) }}">
                                     {{ $link['name'] }}
@@ -22,7 +22,7 @@
                                     @endif
                                 </a>
                             </li>
-                        @endunless
+                        @endif
                     @endforeach
                 </ul>
                 <div class="quote_btn-container">

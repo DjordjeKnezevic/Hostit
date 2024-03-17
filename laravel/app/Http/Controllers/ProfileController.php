@@ -206,13 +206,29 @@ class ProfileController extends Controller
             $endDate = $startDate->addYear();
         }
 
+
         DB::transaction(function () use ($subscription, $endDate) {
+            $server = Server::findOrFail($subscription->service_id);
+            $serverType = $server->serverType;
+
+            $regionResource = RegionResource::where('location_id', $server->location_id)->firstOrFail();
+
+            $regionResource->remaining_cpu_cores += $serverType->cpu_cores;
+            $regionResource->remaining_ram += $serverType->ram;
+            $regionResource->remaining_storage += $serverType->storage;
+            $regionResource->remaining_bandwidth += $serverType->network_speed;
+
+            $regionResource->save();
+
             $subscription->update(['end_date' => $endDate]);
             $subscription->serverStatus->update(['status' => 'terminated']);
         });
 
+
         // session()->flash('status', 'Server terminated successfully');
         // session()->flash('alert-type', 'success');
+
+        session()->flash('success', 'Server terminated successfully');
 
         return view('partials.server-status', ['subscription' => $subscription]);
     }

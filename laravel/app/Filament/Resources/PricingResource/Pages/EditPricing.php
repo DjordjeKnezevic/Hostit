@@ -26,7 +26,7 @@ class EditPricing extends EditRecord
         $validFrom = $data['valid_from'] ?? now();
         $validUntil = $data['valid_until'] ?? null;
 
-        $validFrom = $validFrom ? Carbon::parse($validFrom) : now();
+        $validFrom = Carbon::parse($validFrom);
         $validUntil = $validUntil ? Carbon::parse($validUntil) : null;
 
         if ($validUntil && $validFrom->gt($validUntil)) {
@@ -39,7 +39,7 @@ class EditPricing extends EditRecord
             throw new ValidationException($validator);
         }
 
-        $data['valid_from'] = $validFrom ?? now();
+        $data['valid_from'] = $validFrom;
         return $data;
     }
 }

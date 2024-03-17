@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('route');
             $table->string('icon')->nullable();
-            $table->boolean('is_footer')->default(false); // To determine if it's a footer link
+            $table->boolean('is_navbar')->default(false);
             $table->timestamps();
         });
     }

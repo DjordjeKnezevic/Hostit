@@ -19,4 +19,9 @@ class Pricing extends Model
     {
         return $this->morphTo(__FUNCTION__, 'service_type', 'service_id');
     }
+
+    public function subscriptions()
+    {
+        return $this->hasMany(Subscription::class);
+    }
 }

@@ -14,13 +14,13 @@ class NavigationLinksTableSeeder extends Seeder
     public function run()
     {
         $navLinks = [
-            ['name' => 'Home', 'route' => 'index', 'icon' => 'img/nav-bullet.png', 'is_footer' => false],
-            ['name' => 'About', 'route' => 'about', 'icon' => 'img/nav-bullet.png', 'is_footer' => false],
-            ['name' => 'Servers', 'route' => 'server', 'icon' => 'img/nav-bullet.png', 'is_footer' => false],
-            ['name' => 'Pricing', 'route' => 'price', 'icon' => 'img/nav-bullet.png', 'is_footer' => false],
-            ['name' => 'Contact Us', 'route' => 'contact', 'icon' => 'img/nav-bullet.png', 'is_footer' => false],
-            ['name' => 'Portfolio', 'route' => 'https://djordjeknezevic.github.io/', 'icon' => 'img/nav-bullet.png', 'is_footer' => true],
-            ['name' => 'Dokumentacija', 'route' => '/Dokumentacija.pdf', 'icon' => 'img/nav-bullet.png', 'is_footer' => true],
+            ['name' => 'Home', 'route' => 'index', 'icon' => 'img/nav-bullet.png', 'is_navbar' => true],
+            ['name' => 'About', 'route' => 'about', 'icon' => 'img/nav-bullet.png', 'is_navbar' => true],
+            ['name' => 'Servers', 'route' => 'server', 'icon' => 'img/nav-bullet.png', 'is_navbar' => true],
+            ['name' => 'Pricing', 'route' => 'price', 'icon' => 'img/nav-bullet.png', 'is_navbar' => true],
+            ['name' => 'Contact Us', 'route' => 'contact', 'icon' => 'img/nav-bullet.png', 'is_navbar' => true],
+            ['name' => 'Portfolio', 'route' => 'https://djordjeknezevic.github.io/', 'icon' => 'img/nav-bullet.png', 'is_navbar' => false],
+            ['name' => 'Dokumentacija', 'route' => '/Dokumentacija.pdf', 'icon' => 'img/nav-bullet.png', 'is_navbar' => false],
         ];
 
         foreach ($navLinks as $link) {

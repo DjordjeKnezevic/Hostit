@@ -4,16 +4,16 @@ namespace App\Filament\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
-use App\Models\Pricing;
 use App\Models\Server;
+use App\Models\Pricing;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\Tabs\Tab;
-use Filament\Forms\Components\DatePicker;
 use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Filament\Forms\Components\DateTimePicker;
 use App\Filament\Resources\PricingResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\PricingResource\RelationManagers;
@@ -22,7 +22,7 @@ class PricingResource extends Resource
 {
     protected static ?string $model = Pricing::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-tag';
 
     public static function form(Form $form): Form
     {
@@ -62,10 +62,10 @@ class PricingResource extends Resource
                         'yearly' => 'Yearly',
                     ])
                     ->label('Period'),
-                DatePicker::make('valid_from')
+                DateTimePicker::make('valid_from')
                     ->label('Valid From')
                     ->rules(['nullable', 'date']),
-                DatePicker::make('valid_until')
+                DateTimePicker::make('valid_until')
                     ->label('Valid Until')
                     ->rules(['nullable', 'date']),
             ]);
