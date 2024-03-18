@@ -29,9 +29,11 @@ RUN npm install
 # For production
 # RUN npm run dev
 
-COPY ./docker/php/start.sh /start.sh
+# COPY ./docker/php/start.sh /start.sh
+RUN chown -R www-data:www-data /var/www/html/storage
+RUN chmod -R 775 /var/www/html/storage
 
-RUN chmod +x /start.sh
+# RUN chmod +x /start.sh
 
 EXPOSE 9000
-CMD ["/start.sh"]
+CMD ["php-fpm"]
