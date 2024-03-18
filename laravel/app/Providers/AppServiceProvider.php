@@ -2,11 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\NavigationLink;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Database\Eloquent\Relations\Relation;
-use App\Models\NavigationLink;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -23,8 +24,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $navLinks = NavigationLink::all();
-
-        View::share('navLinks', $navLinks);
+        if (Schema::hasTable('navigation_links')) {
+            $navLinks = NavigationLink::all();
+            View::share('navLinks', $navLinks);
+        }
     }
+
 }
